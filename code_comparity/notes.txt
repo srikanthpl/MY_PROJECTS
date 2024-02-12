@@ -1,0 +1,18 @@
+create an virtual environment
+
+python -m venv env_name
+source env_name/bin/activate
+
+install required packages
+pip requirements -r requirements.txt
+pip install imgkit Pillow
+
+
+
+sudo apt-get update
+sudo apt-get install wkhtmltopdf
+
+if check version:
+wkhtmltopdf --version
+wkhtmltoimage --version
+

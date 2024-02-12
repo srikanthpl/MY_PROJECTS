@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Historical Figure Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #336699;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #336699;
+            font-weight: bold;
+        }
+
+        select,
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        #send-button,
+        #end-conversation-button {
+            padding: 10px 20px;
+            background-color: #336699;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #chat-container {
+            display: none;
+        }
+
+        #chat {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+
+        .user-message,
+        .ai-message {
+            background-color: #e6f7ff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            max-width: 70%;
+            clear: both;
+        }
+
+        .user-message {
+            float: right;
+            background-color: #336699;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .ai-message {
+            float: left;
+            background-color: #f2f2f2;
+            color: black;
+            margin-left: 10px;
+        }
+
+
+        #user-input {
+            width: 70%;
+            border-radius: 4px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>Historical Figure Chat</h1>
+
+        <label for="historical-figure">Select a Historical Figure:</label>
+        <select id="historical-figure" name="historical-figure">
+            <option value="custom">Enter a Custom Figure</option>
+            <option value="shakespeare">Shakespeare - Literature</option>
+            <option value="gandhi">Gandhi - Politics & Humanity</option>
+            <option value="newton">Newton - Invention & Science</option>
+            <option value="annafrued">Anna Freud - Psychology</option>
+            <option value="davinci">Leonardo da Vinci - Art</option>
+            <option value="columbus">Christopher Columbus</option>
+            <option value="aristotle">Aristotle - Philosophy</option>
+            <option value="buddha">Buddha - Religion & Wisdom</option>
+            <option value="jesus">Jesus - Religion & Wisdom</option>
+            <option value="lincoln">Abraham Lincoln - Politics</option>
+        </select>
+
+        <div id="chat-container" style="display: none;">
+            <div id="chat"></div>
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button type="button" id="send-button">Send</button>
+            <button type="button" id="end-conversation-button">End Conversation</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('historical-figure').addEventListener('change', function () {
+            const selectedFigure = this.value;
+            const chatContainer = document.getElementById('chat-container');
+
+            if (selectedFigure === 'custom') {
+                chatContainer.style.display = 'none';
+            } else {
+                chatContainer.style.display = 'block';
+                clearChat();
+                displayChatMessage(selectedFigure, 'figure', selectedFigure);
+            }
+        });
+
+        document.getElementById('send-button').addEventListener('click', function () {
+            const userMessage = document.getElementById('user-input').value;
+            if (userMessage.trim() !== '') {
+                const selectedFigure = document.getElementById('historical-figure').value;
+                displayChatMessage('You', 'user', userMessage);
+                sendMessageToAI(selectedFigure, userMessage);
+                document.getElementById('user-input').value = '';
+            }
+        });
+
+        function displayChatMessage(sender, userType, message) {
+            const chat = document.getElementById('chat');
+            const chatMessage = document.createElement('div');
+            chatMessage.className = `${userType}-message`;
+
+            const senderElement = document.createElement('div');
+            senderElement.textContent = `${sender}`;
+            senderElement.style.fontWeight = 'bold';
+
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${message}`;
+
+            chatMessage.appendChild(senderElement);
+            chatMessage.appendChild(messageElement);
+            chat.appendChild(chatMessage);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+
+        function sendMessageToAI(selectedFigure, userMessage) {
+            const data = {
+                figure: selectedFigure,
+                message: userMessage
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/conversation');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    displayChatMessage(selectedFigure, 'ai', response.answer);
+                } else {
+                    displayChatMessage('AI', 'ai', 'An error occurred while getting AI response.');
+                }
+            };
+
+            xhr.onerror = function () {
+                displayChatMessage('AI', 'ai', 'An error occurred while sending the request.');
+            };
+
+            xhr.send(JSON.stringify(data));
+        }
+
+        function clearChat() {
+            const chat = document.getElementById('chat');
+            chat.innerHTML = '';
+        }
+
+    </script>
+</body>
+
+</html>

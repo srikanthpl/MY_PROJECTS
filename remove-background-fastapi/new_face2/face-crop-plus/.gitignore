@@ -1,0 +1,19 @@
+# CelebA
+landmark.txt
+img_celeba
+img_celeba_faces
+
+# Demo
+demo/input_images_faces
+
+# IDE
+.vscode
+
+# Build
+dist
+build
+_build
+_static
+_templates
+__pycache__
+*.egg-info

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Getwow Code Tutor</title>
+    <style>
+        /* Existing styles... */
+
+        /* Style for the Live Editor button */
+        .live-editor-button {
+            position: absolute;
+            /* Position the button absolutely within its relative parent */
+            top: 20px;
+            /* 20px from the top of the container */
+            right: 20px;
+            /* 20px from the right of the container */
+            padding: 10px 20px;
+            background-color: #336699;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .live-editor-button:hover {
+            background-color: #5599dd;
+            /* Lighter shade on hover */
+        }
+
+        #container {
+            position: relative;
+            /* Set the container to relative so the button can position itself absolutely within it */
+            /* Other existing styles... */
+        }
+
+
+        /* Common styles for both light and dark modes */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: #336699;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #336699;
+            font-weight: bold;
+        }
+
+        select,
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        #send-button,
+        #end-conversation-button,
+        #code-button,
+        #submit-code {
+            padding: 10px 20px;
+            background-color: #336699;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #chat-container {
+            display: none;
+        }
+
+        #chat {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+
+        .user-message,
+        .ai-message {
+            background-color: #e6f7ff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            max-width: 70%;
+            clear: both;
+        }
+
+        .user-message {
+            float: right;
+            background-color: #336699;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .ai-message {
+            float: left;
+            background-color: #f2f2f2;
+            color: black;
+            margin-left: 10px;
+        }
+
+
+        #user-input {
+            width: 70%;
+            border-radius: 4px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        /* Dark mode styles... */
+
+        body.dark-mode {
+            background-color: #181818;
+            color: #ffffff;
+        }
+
+        #container.dark-mode {
+            background-color: #252525;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        #toggle-theme {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            /* Changed from right to left */
+            padding: 10px;
+            background-color: #252525;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #toggle-theme:hover {
+            background-color: #336699;
+            transform: rotate(180deg);
+        }
+
+
+        .quote {
+            font-style: italic;
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+
+        #code-container {
+            display: none;
+            /* Hidden by default */
+            margin-bottom: 10px;
+        }
+
+        #code-input {
+            width: 100%;
+            height: 150px;
+            /* Increased height */
+            font-family: monospace;
+            color: #181818;
+            /* To give a code-like appearance */
+        }
+
+        /* Increase the width of the user input */
+        #user-input {
+            width: calc(70% - 22px);
+            /* Adjusted for padding and border */
+            display: inline-block;
+            /* To align with buttons */
+        }
+
+        .user-message,
+        .ai-message {
+            max-width: 70%;
+            word-wrap: break-word;
+            /* Other styles... */
+        }
+
+        /* For code snippets */
+        .code-message pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .code-message code {
+            color: black;
+            /* Changed text color to black */
+        }
+
+        #api-key-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        #api-key-input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: calc(70% - 16px);
+            /* Adjusted for padding */
+            display: inline-block;
+        }
+
+        #api-key-button {
+            padding: 10px 20px;
+            background-color: #336699;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            /* Space between input and button */
+        }
+
+        #api-key-button:hover {
+            background-color: #5599dd;
+            /* Lighter shade on hover */
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="container">
+
+        <button type="button" class="live-editor-button"
+            onclick="window.open('/static/LiveRenderer/index.html', '_blank')">Open
+            Live Editor</button>
+
+
+        <h1>Code For Kids</h1>
+        <p class="quote">"Making the generation expert in Code"</p>
+        
+
+        <label for="grade-select">Select Your Grade:</label>
+        <select id="grade-select">
+            <option value="1-5">Grades 1-5</option>
+            <option value="6-9">Grades 6-9</option>
+            <option value="10-12">Grades 10-12</option>
+        </select>
+
+        <label for="experience-select">Select Your Coding Experience:</label>
+        <select id="experience-select">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select>
+
+        <!-- <label for="language-select">Select a Programming Language:</label>
+        <select id="language-select" name="language-select">
+            <option value="custom">Custom Language</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="Javascript">Javascript</option>
+        </select> -->
+
+        <div id="chat-container">
+            <div id="chat"></div>
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button type="button" id="send-button">Send</button>
+            <button type="button" id="code-button">Enter Code</button>
+
+            <div id="code-container">
+                <textarea id="code-input" placeholder="Type your code here..."></textarea>
+                <button type="button" id="submit-code">Submit Code</button>
+            </div>
+        </div>
+
+        <button type="button" id="toggle-theme">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12 2V4M12 20V22M2 12H4M20 12H22M4.92918 4.92918L7.05025 7.05025M16.9497 16.9497L19.0708 19.0708M2 20L4.92918 16.0708M19.0708 7.05025L22 4.12109M7.05025 19.0708L4.12109 22"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const session_id = Date.now().toString();
+
+            document.getElementById('grade-select').addEventListener('change', function () {
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.style.display = this.value !== '' ? 'block' : 'none';
+            });
+
+            document.getElementById('send-button').addEventListener('click', function () {
+                sendMessage();
+            });
+
+            document.getElementById('user-input').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            document.getElementById('code-button').addEventListener('click', function () {
+                document.getElementById('code-container').style.display = 'block';
+            });
+
+            document.getElementById('submit-code').addEventListener('click', function () {
+                submitCode();
+            });
+
+            document.getElementById('toggle-theme').addEventListener('click', function () {
+                document.body.classList.toggle('dark-mode');
+                document.getElementById('container').classList.toggle('dark-mode');
+            });
+
+            
+            
+
+            function sendMessage() {
+                const userMessage = document.getElementById('user-input').value;
+                if (userMessage.trim() !== '') {
+                    const grade = document.getElementById('grade-select').value;
+                    const experience = document.getElementById('experience-select').value;
+                    displayChatMessage('You', 'user', userMessage);
+                    sendMessageToAI(userMessage, grade, experience);
+                    document.getElementById('user-input').value = '';
+                }
+            }
+
+            
+
+            async function sendMessageToAI(message, grade, experience) {
+                try {
+                    const response = await fetch('http://49.50.69.58:8004/conversation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            session_id: session_id,
+                            message: message,
+                            grade: grade,
+                            experience: experience
+                        })
+                    });
+                    const data = await response.json();
+                    displayChatMessage('AI', 'ai', data.answer);
+                } catch (error) {
+                    displayChatMessage('AI', 'ai', 'An error occurred while getting the AI response.');
+                }
+            }
+
+            function submitCode() {
+                const codeContent = document.getElementById('code-input').value;
+                if (codeContent.trim() !== '') {
+                    displayChatMessage('You', 'user', codeContent, true);
+                    sendMessageToAI(codeContent, 'Custom', 'Custom');
+                    document.getElementById('code-input').value = '';
+                    document.getElementById('code-container').style.display = 'none';
+                }
+            }
+
+            function displayChatMessage(sender, userType, message, isCode = false) {
+                const chat = document.getElementById('chat');
+                const chatMessage = document.createElement('div');
+                chatMessage.className = `${userType}-message`;
+
+                const senderElement = document.createElement('div');
+                senderElement.textContent = `${sender}:`;
+                senderElement.style.fontWeight = 'bold';
+
+                const messageElement = document.createElement('div');
+                if (isCode) {
+                    const pre = document.createElement('pre');
+                    const code = document.createElement('code');
+                    code.textContent = message;
+                    pre.appendChild(code);
+                    messageElement.appendChild(pre);
+                    chatMessage.classList.add('code-message');
+                } else {
+                    messageElement.textContent = message;
+                }
+
+                chatMessage.appendChild(senderElement);
+                chatMessage.appendChild(messageElement);
+                chat.appendChild(chatMessage);
+                chat.scrollTop = chat.scrollHeight;
+            }
+
+            function clearChat() {
+                const chat = document.getElementById('chat');
+                chat.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

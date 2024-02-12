@@ -1,0 +1,56 @@
+from flask import Flask, request, jsonify
+import openai
+
+app = Flask(__name__)
+
+openai.api_key = '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'
+
+historical_figures = {
+    'shakespeare': "William Shakespeare",
+    'gandhi': "Mahatma Gandhi",
+    'newton': "Isaac Newton",
+    'annafrued':"Anna Freud",
+    'davinci':"Leonardo da Vinci",
+    'columbus':"Christopher Columbus",
+    'aristotle':"Aristotle",
+    'buddha':"Buddha",
+    'jesus':"Jesus Christ",
+    'lincoln':"Abraham Lincoln",
+    # Add more historical figures and their prompts as needed
+}
+
+@app.route('/')
+def home():
+    return app.send_static_file('index.html')
+
+@app.route('/conversation', methods=['POST'])
+def conversation():
+    data = request.get_json()
+    selected_figure = data['figure']
+    user_message = data['message']
+
+    if selected_figure in historical_figures:
+        figure_name = historical_figures[selected_figure]
+        prompt = f"You are impersonating {figure_name}. Respond to the following message: \n{user_message}"
+        
+        # Generate AI response using OpenAI API
+        response = generate_ai_response(prompt)
+        
+        ai_response = response.choices[0].text.strip()
+        return jsonify({'answer': ai_response})
+    else:
+        return jsonify({'answer': f"AI: I'm not familiar with {selected_figure}."})
+
+def generate_ai_response(prompt):
+    response = openai.Completion.create(
+        engine='text-davinci-003',
+        prompt=prompt,
+        max_tokens=100,
+        n=1,
+        stop=None,
+        temperature=0.7
+    )
+    return response
+
+if __name__ == '__main__':
+    app.run(debug=True)

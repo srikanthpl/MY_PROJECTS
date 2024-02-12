@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+
+<head>
+  <title>Code Playground</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Codeplayground">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui">
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background-color: #dfe6f0;
+      /* Light blue selection color */
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      /* Simplified font */
+      color: #333;
+      /* Dark gray text for better readability */
+      background: #f8f8f8;
+      /* Light background */
+    }
+
+    header {
+      width: 100%;
+      height: 60px;
+      /* Increased height for better visibility */
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #4a90e2;
+      /* School-like blue header */
+      padding: 0 20px;
+      /* Increased padding */
+      box-shadow: rgba(0, 0, 0, .1) 0 1px 2px;
+      z-index: 250;
+      display: flex;
+      align-items: center;
+      /* Vertically center items */
+      justify-content: space-between;
+      /* Distribute space between elements */
+    }
+
+    header #brand {
+      font-weight: bold;
+      color: white;
+      /* White text for brand */
+    }
+
+    header nav {
+      display: flex;
+      /* Flexbox for navigation */
+    }
+
+    header button {
+      outline: none;
+      width: auto;
+      /* Auto width for buttons */
+      padding: 10px 15px;
+      /* Padding for buttons */
+      margin: 0 5px;
+      /* Margin between buttons */
+      border-radius: 4px;
+      /* Rounded corners */
+      border: none;
+      color: white;
+      /* White text for buttons */
+      cursor: pointer;
+      background: #3b79c7;
+      /* Slightly darker blue for buttons */
+      transition: background-color .2s;
+    }
+
+    header button:hover {
+      background-color: #3272b3;
+      /* Color change on hover */
+    }
+
+    section {
+      padding: 70px 15px 30px 15px;
+      /* Adjust padding to avoid overlap with header */
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      /* Add scroll for overflow */
+    }
+
+    #editor,
+    #preview {
+      width: 49.5%;
+      float: left;
+      margin: 0 .25%;
+      border: 1px solid #ccc;
+      /* Border for editor and preview */
+      border-radius: 4px;
+      /* Rounded corners */
+      background: white;
+      /* White background for editor and preview */
+      box-shadow: rgba(0, 0, 0, .05) 0 1px 2px;
+    }
+
+    #editor {
+      font-family: 'Consolas', 'Monaco', monospace;
+      /* Monospace font for code editor */
+      color: #333;
+      /* Dark gray text */
+      padding: 15px;
+      height: calc(100vh - 140px);
+      /* Adjust height to fill space */
+      resize: none;
+      /* Disable resizing */
+      outline: none;
+      transition: background-color .1s ease-in-out;
+      font-family: 'Source Code Pro', Menlo, Consolas, monospace;
+
+      background: #ffffff;
+      outline: none;
+      border: none;
+      padding: 15px;
+      font-size: 12pt;
+      line-height: 1.2;
+      font-weight: 300;
+      height: auto;
+      box-shadow: rgb(242, 242, 242) 0 1px 2px;
+      margin-left: 0;
+    }
+
+    #preview {
+      opacity: 0.9;
+      /* Slightly transparent */
+      height: calc(100vh - 140px);
+      /* Adjust height to fill space */
+    }
+
+    #preview:hover,
+    #preview:focus {
+      opacity: 1;
+    }
+
+    #aiResponseContainer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    #aiResponse {
+      margin-bottom: 20px;
+    }
+
+    footer {
+      background: #4a90e2;
+      /* Consistent blue footer */
+      color: white;
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 5px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 250;
+      box-shadow: rgba(0, 0, 0, .1) 0 -1px 2px;
+    }
+
+    footer .download {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+    }
+
+    #aiResponseContainer {
+      background-color: #f8f9fa;
+      /* Light background for readability */
+      border: 1px solid #c8d6e5;
+      /* Soft blue border */
+      border-radius: 8px;
+      /* Rounded corners */
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      /* Subtle shadow for depth */
+      padding: 20px;
+      /* Padding for inner spacing */
+      width: 80%;
+      /* Appropriate width */
+      max-width: 500px;
+      /* Maximum width */
+      margin: 20px auto;
+      /* Center align */
+      display: flex;
+      /* Flex layout for inner elements */
+      flex-direction: column;
+      /* Column layout */
+      gap: 10px;
+      /* Spacing between elements */
+    }
+
+    #aiResponse {
+      background-color: #fff;
+      /* White background for the response area */
+      border: 1px solid #d3d3d3;
+      /* Light grey border */
+      padding: 10px;
+      /* Padding inside the response area */
+      min-height: 100px;
+      /* Minimum height */
+      overflow-y: auto;
+      /* Scrollbar for overflow content */
+      font-family: 'Arial', sans-serif;
+      /* Readable font */
+      color: #333;
+      /* Dark text color for contrast */
+    }
+
+    #userMessageInput {
+      padding: 10px;
+      /* Comfortable padding for typing */
+      border: 1px solid #c8d6e5;
+      /* Soft blue border */
+      border-radius: 4px;
+      /* Rounded corners */
+      outline: none;
+      /* Remove default focus outline */
+      font-size: 16px;
+      /* Readable font size */
+    }
+
+    #aiResponseContainer button {
+      padding: 10px 15px;
+      /* Padding for buttons */
+      background-color: #4a90e2;
+      /* School-like blue color */
+      border: none;
+      /* Remove border */
+      border-radius: 4px;
+      /* Rounded corners */
+      color: white;
+      /* Text color */
+      font-weight: bold;
+      /* Bold font for button text */
+      cursor: pointer;
+      /* Cursor change to indicate clickability */
+      outline: none;
+      /* Remove default focus outline */
+      transition: background-color 0.3s;
+      /* Smooth transition for hover effect */
+    }
+
+    #aiResponseContainer button:hover {
+      background-color: #3b79c7;
+      /* Darker shade on hover */
+    }
+
+    #aiResponseContainer button:focus {
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
+      /* Focus ring for accessibility */
+    }
+    
+
+
+    @media (max-width: 768px) {
+
+      #editor,
+      #preview {
+        width: 100%;
+        margin: 10px 0;
+        border: 1px 1px #000000;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section>
+    <!-- <label for="code-label">Enter your code</label> -->
+    <textarea id="editor" autofocus></textarea>
+    <!-- <label for="render-label">Rendered view of your code </label> -->
+    <iframe id="preview"></iframe>
+    
+  </section>
+  <header>
+    <span id="brand"><strong>Code Playground</strong> <span id="filename"></span></span>
+    <nav>
+      <button id="askWowsa">AskWowsa</button>
+      <button id="zen" onclick="swingPane('editor','preview')">Editor</button>
+      <button id="view" onclick="swingPane('preview','editor')">Webview</button>
+      <button id="save" onclick="exportNote()">save</button>
+      <!-- <button id="switch" onclick="switchNote()">switch</button> -->
+    </nav>
+  </header>
+  <div id="aiResponseContainer" style="display:none;">
+    
+    <div id="aiResponse"></div>
+    <input type="text" id="userMessageInput" placeholder="Type your message here...">
+    <button onclick="sendUserMessage()">Send</button>
+    <button onclick="closeAIResponse()">Close</button>
+  </div>
+
+  <footer><a id="download" download="export.html"></a></footer>
+  <script type="text/javascript">
+    document.getElementById('askWowsa').addEventListener('click', function () {
+      const codeContent = editorPane.value;
+      if (codeContent.trim() !== '') {
+        sendCodeToAI(codeContent);
+        document.getElementById('aiResponse').textContent = ''; // Clear previous response
+      }
+    });
+
+
+    function sendCodeToAI(code) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/ask_wowsa', true); // Make sure this matches your Flask route
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          displayAIResponse(response.answer);
+        } else {
+          displayAIResponse('An error occurred while getting the AI response.');
+        }
+      };
+      xhr.onerror = function () {
+        displayAIResponse('An error occurred while sending the request.');
+      };
+      xhr.send(JSON.stringify({ code: code }));
+    }
+
+
+    function displayAIResponse(response) {
+      document.getElementById('aiResponse').textContent = response;
+      document.getElementById('aiResponseContainer').style.display = 'block';
+    }
+
+    function closeAIResponse() {
+      document.getElementById('aiResponseContainer').style.display = 'none';
+    }
+
+    var editorPane = document.getElementById('editor'),
+      previewPane = document.getElementById('preview'),
+      downloadLink = document.getElementById('download'),
+      fileName = '';
+
+    // Editor Interactions
+    onload = editorPane.onkeyup = function () {
+      refreshView();
+      if (fileName == '') { switchNote() };
+      localStorage[fileName] = editorPane.value;
+      document.body.id = 'tapZap';
+      tapZap();
+    };
+    editorPane.onfocus = function () {
+      this.style.webkitTransform = 'translate3D(0px, -10000px,0)';
+      webkitRequestAnimationFrame(function () {
+        this.style.webkitTransform = '';
+      }.bind(this));
+    };
+    editorPane.onkeydown = function (event) {
+      if (event.keyCode === 9) {
+        softTab('  '); // tabs set at 2 spaces
+        event.preventDefault();
+      }
+    }
+
+    // Editor Functions
+    function refreshView() {
+      editorPane.style.height = (window.innerHeight - 110) + 'px';
+      previewPane.style.height = (window.innerHeight - 110) + 'px';
+      (previewPane.contentWindow.document).write(editorPane.value);
+      (previewPane.contentWindow.document).close();
+      editorPane.focus();
+    }
+    function softTab(spaces) {
+      if (document.selection) {
+        editorPane.focus();
+        var tab = document.selection.createRange();
+        tab.text = spaces;
+        return;
+      }
+      else if (editorPane.selectionStart || editorPage.selectionStart == '0') {
+        var startPos = editorPane.selectionStart,
+          endPos = editorPane.selectionEnd,
+          scrollTop = editorPane.scrollTop;
+        editorPane.value = editorPane.value.substring(0, startPos) + spaces + editorPane.value.substring(endPos, editorPane.value.length);
+        editorPane.focus();
+        editorPane.selectionStart = startPos + spaces.length;
+        editorPane.selectionEnd = startPos + spaces.length;
+      } else {
+        editorPane.value += textArea.value;
+        editorPane.focus();
+      }
+    };
+
+
+
+    function switchNote() {
+      fileName = 'scratchpad'; // Default scratchpad name
+      if (localStorage[fileName]) {
+        editorPane.value = localStorage[fileName];
+      } else {
+        editorPane.value = ''; // Start with an empty scratchpad if nothing is saved
+      }
+      downloadLink.setAttribute('download', fileName + '.html');
+      document.getElementById('filename').innerHTML = ': ' + fileName;
+      document.title = 'Code Playground:' + fileName;
+      refreshView();
+    }
+    function swingPane(reveal, conceal) {
+      var revealPane = document.getElementById(reveal),
+        concealPane = document.getElementById(conceal);
+      if (revealPane.style.width != '100%') {
+        concealPane.setAttribute('style', 'width: 0; margin: 0; padding: 0;');
+        revealPane.setAttribute('style', 'width: 100%; margin-left: 0; opacity: 1;');
+      } else {
+        concealPane.setAttribute('style', 'width: 49.25%;');
+        revealPane.setAttribute('style', 'width: 49.25%;');
+      }
+      refreshView();
+    };
+    function exportNote() {
+      downloadLink.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(editorPane.value);
+      downloadLink.click();
+    };
+
+    // tapZap eliminates the 300ms standard delay added afer `touchstart` for mobile users, for quicker user interactions
+    function tapZap(element, handler) {
+      this.element = element;
+      this.handler = handler;
+      element.addEventListener('touchstart', this, false);
+      element.addEventListener('click', this, false);
+    };
+    tapZap.prototype.handleEvent = function (event) {
+      switch (event.type) {
+        case 'touchstart': this.onTouchStart(event); break;
+        case 'touchmove': this.onTouchMove(event); break;
+        case 'touchend': this.onClick(event); break;
+        case 'click': this.onClick(event); break;
+      }
+    };
+    tapZap.prototype.onTouchStart = function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.element.addEventListener('touchend', this, false);
+      document.body.addEventListener('touchmove', this, false);
+      this.startX = event.touches[0].clientX;
+      this.startY = event.touches[0].clientY;
+      isMoving = false;
+    };
+    tapZap.prototype.onTouchMove = function (event) {
+      if (Math.abs(event.touches[0].clientX - this.startX) > 10 ||
+        Math.abs(event.touches[0].clientY - this.startY) > 10) {
+        this.reset();
+      }
+    };
+    tapZap.prototype.onClick = function (event) {
+      this.reset();
+      this.handler(event);
+      if (event.type == 'touchend') {
+        preventGhostClick(this.startX, this.startY);
+      }
+    };
+    tapZap.prototype.reset = function () {
+      this.element.removeEventListener('touchend', this, false);
+      document.body.removeEventListener('touchmove', this, false);
+    };
+    function preventGhostClick(x, y) {
+      coordinates.push(x, y);
+      window.setTimeout(ghostPop, 2500);
+    };
+    function ghostPop() {
+      coordinates.splice(0, 2);
+    };
+    function ghostClick(event) {
+      for (var i = 0; i < coordinates.length; i += 2) {
+        var x = coordinates[i];
+        var y = coordinates[i + 1];
+        if (Math.abs(event.clientX - x) < 25 && Math.abs(event.clientY - y) < 25) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+      }
+    };
+    document.addEventListener('click', ghostClick.onClick, true);
+    var coordinates = [];
+    function initTapZap() {
+      new tapZap(document.getElementbyId('tapZap'), goSomewhere);
+    }
+
+
+    function sendUserMessage() {
+      const codeContent = editorPane.value;
+      const userMessage = document.getElementById('userMessageInput').value;
+
+      if (codeContent.trim() !== '' && userMessage.trim() !== '') {
+        sendCodeAndMessageToAI(codeContent, userMessage);
+        document.getElementById('userMessageInput').value = ''; // Clear user message input after sending
+      }
+    }
+
+    async function sendCodeAndMessageToAI(code, userMessage) {
+      try {
+        const response = await fetch('http://49.50.69.58:8004/ask_wowsa_with_message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code: code, user_message: userMessage })
+        });
+        const data = await response.json();
+        displayAIResponse(data.answer);
+      } catch (error) {
+        displayAIResponse('An error occurred while getting the AI response.');
+      }
+    }
+
+
+    async function sendCodeToAI(code) {
+      try {
+        const response = await fetch('http://49.50.69.58:8004/ask_wowsa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code: code })
+        });
+        const data = await response.json();
+        displayAIResponse(data.answer);
+      } catch (error) {
+        displayAIResponse('An error occurred while getting the AI response.');
+      }
+    }
+
+
+    function goSomewhere() {
+      var theTarget = document.elementFromPoint(this.startX, this.startY);
+      if (theTarget.nodeType == 3) theTarget = theTarget.parentNode;
+      var theEvent = document.createEvent('MouseEvents');
+      theEvent.initEvent('click', true, true);
+      theTarget.dispatchEvent(theEvent);
+    };
+  </script>
+</body>
+</html>  

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+ <br><br>
+
+<!--
+  <button class = "geeks" style="margin-left:150px;" onclick="getlocation()">Click</button>
+  <p id="demo1"></p>
+  -->
+
+
+<form method="post" enctype="multipart/form-data" action="predict" style="width:40%;" class="mx-auto">
+
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Temperature</label>
+    <input type="text" class="form-control" name="tempVal" placeholder="Enter temperature" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Humidity</label>
+    <input type="text" class="form-control" name='humidityVal' placeholder="Enter humidity" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">pH value</label>
+    <input type="text" class="form-control" name='phVal' placeholder="Enter pH" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Rainfall</label>
+    <input type="text" class="form-control" name='rainfallVal' placeholder="Enter rainfall value" required>
+  </div>
+  <button type="submit" value="submit" class="btn btn-primary">Predict</button>
+</form>
+<br/><br/><br/>
+{% if ans %}
+<h2><pre><mark>The Predicted Crop is {{ans}}</mark></pre></h2>
+{% endif %}
+
+<!--
+   <script>
+        var variable1 = document.getElementById("demo1");
+        function getlocation(){
+                navigator.geolocation.getCurrentPosition(showLoc);
+        }
+        function showLoc(pos){
+                variable1.innerHTML = "Latitude: " + pos.coords.latitude + 
+                "<br>Longitude: " + pos.coords.longitude; 
+            }
+   </script>
+-->
+{% endblock %}

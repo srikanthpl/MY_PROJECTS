@@ -1,0 +1,4 @@
+[12-Feb-2020 11:15:44 Etc/GMT] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /home/hyperpla/public_html/hypersupermarket.in/application/views/home.php:1
+Stack trace:
+#0 {main}
+  thrown in /home/hyperpla/public_html/hypersupermarket.in/application/views/home.php on line 1

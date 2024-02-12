@@ -1,0 +1,27 @@
+.my-check{
+	float: left;
+	margin-left: 15px;  
+}
+.product-imgs img{
+	width: 100px !important;
+	height: 100px;
+}
+@media only screen and (max-width: 600px) {
+	.table-responsive{
+      overflow: scroll !important;
+	}
+    .site-min-height{
+    	margin-top: 110px;
+    }
+    .my-check {
+    float: inherit;
+    }
+    .product-imgs{
+    	height: 180px;
+    	overflow: hidden;
+    }
+    .product-imgs img{
+	 width: 100% !important;
+	 height: 100%;
+    }
+}

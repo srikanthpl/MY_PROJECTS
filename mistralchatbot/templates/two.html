@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with Ollama</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <textarea id="user-input" placeholder="Enter your message here"></textarea>
+        <button onclick="sendMessage()">Send</button>
+        <div id="chat-box"></div>
+    </div>
+
+    <script>
+        let websocket = new WebSocket("ws://localhost:8000/ws/");
+        websocket.onmessage = function(event) {
+            const responseText = event.data;
+            const chatBox = document.getElementById("chat-box");
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = "AI: " + responseText;
+            chatBox.appendChild(messageDiv);
+        };
+
+        function sendMessage() {
+            const userInputElem = document.getElementById('user-input');
+            const userInput = userInputElem.value;
+            const chatRequest = { session_id: "session1", user_input: userInput };
+
+            websocket.send(JSON.stringify(chatRequest));
+
+            const chatBox = document.getElementById("chat-box");
+            const userMessageDiv = document.createElement("div");
+            userMessageDiv.textContent = "You: " + userInput;
+            chatBox.appendChild(userMessageDiv);
+
+            userInputElem.value = ""; // Clear input field
+        }
+    </script>
+</body>
+</html>

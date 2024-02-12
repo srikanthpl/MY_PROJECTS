@@ -1,0 +1,14 @@
+* Create a new virtual environment
+python3 -m venv myenv
+
+* Activate the virtual environment
+source myenv/bin/activate  # On Windows, use myenv\Scripts\activate
+
+* Install the necessary packages
+pip install scikit-learn transformers farm-haystack
+
+* Set the path in Terminal
+eg: cd new_folder/HealthCare/Healthcure
+
+* Run the following command
+flask run
